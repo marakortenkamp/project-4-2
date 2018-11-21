@@ -35,8 +35,17 @@ def create_laplacian_2d(nx, ny, lx, ly, pbc=True):
             laplacian[j*nx+i,j*nx+i+1] = 1
             laplacian[j*nx+i+1, j*nx+i] = 1
 
+    if pbc:
+        for i in range(ny):
+            laplacian[i, ny*nx-ny+i] = 1
+            laplacian[ny*nx-ny+i, i] = 1
+
+        for i in range(ny):
+            laplacian[i*nx, (i+1)*nx-1] = 1
+            laplacian[(i+1)*nx-1, i*nx] = 1
+
     laplacian = h*laplacian
 
     return laplacian
 
-print(create_laplacian_2d(3,3,3,3))
+print(create_laplacian_2d(4,4,3,3,True))
