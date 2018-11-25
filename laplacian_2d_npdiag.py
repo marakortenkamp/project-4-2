@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.sparse import diags
 
 
 def create_laplacian_2d(nx, ny, Lx, Ly, pbc=True):
@@ -14,18 +13,24 @@ def create_laplacian_2d(nx, ny, Lx, Ly, pbc=True):
         output:
             Laplacian as nx * ny by nx * ny np.array
     """
+    if type(nx) != int or type(ny) != int:
+        raise TypeError('We need an integer')
+    if type(Lx) != int and type(Lx) != float:
+        raise TypeError('We need a number')
+    if type(Ly) != int and type(Ly) != float:
+        raise TypeError('We need a number')
     if nx < 2 or ny < 2:
         raise ValueError('We need at least two grid points')
     if Lx <= 0 or Ly <= 0:
         raise ValueError('We need a positive length')
-    if not type(pbc) == bool:
+    if type(pbc) != bool:
         raise TypeError('We need a boolean as pbc')
 
     hx = (nx / Lx) ** 2
     hy = (ny / Ly) ** 2
     a1 = (-2 * hx - 2 * hy) * np.diag(np.ones(nx * ny))
-    a2 = np.diag([0 if i%nx == 0 else hx for i in range(1, nx * ny)],1)
-    a3 = np.diag([0 if i%nx == 0 else hx for i in range(1, nx * ny)],-1)
+    a2 = np.diag([0 if i % nx == 0 else hx for i in range(1, nx * ny)], 1)
+    a3 = np.diag([0 if i % nx == 0 else hx for i in range(1, nx * ny)], -1)
     a4 = hy * np.diag(np.ones(nx * ny - nx), nx)
     a5 = hy * np.diag(np.ones(nx * ny - nx), -nx)
     laplacian = a1 + a2 + a3 + a4 + a5
@@ -34,9 +39,9 @@ def create_laplacian_2d(nx, ny, Lx, Ly, pbc=True):
         a6 = hy * np.diag(np.ones(nx), nx * ny - nx)
         a7 = hy * np.diag(np.ones(nx), -nx * ny + nx)
         a8 = np.diag([hx if i % nx == 0 else 0
-                    for i in range(0, nx * ny - nx + 1)], nx - 1)
+                     for i in range(0, nx * ny - nx + 1)], nx - 1)
         a9 = np.diag([hx if i % nx == 0 else 0
-                    for i in range(0, nx * ny - nx + 1)], -nx + 1)
+                     for i in range(0, nx * ny - nx + 1)], -nx + 1)
         laplacian += a6 + a7 + a8 + a9
 
     return laplacian
