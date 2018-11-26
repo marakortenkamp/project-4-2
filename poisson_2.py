@@ -24,22 +24,23 @@ def create_laplacian_2d(nx, ny, lx, ly, pbc=True):
 
     for i in range(n):
         laplacian[i, i] -= (2 / hx + 2 / hy)
-    for j in range(nx - 1):
-        for i in range(ny):
+    for j in range(ny - 1):
+        for i in range(nx):
             laplacian[j * nx + i, (j + 1) * nx + i] += 1 / hy
             laplacian[(j + 1) * nx + i, j * nx + i] += 1 / hy
-    for j in range(nx):
-        for i in range(ny - 1):
+    for j in range(ny):
+        for i in range(nx - 1):
             laplacian[j * nx + i, j * nx + i + 1] += 1 / hx
             laplacian[j * nx + i + 1, j * nx + i] += 1 / hx
 
     if pbc:
-       for i in range(ny):
-           laplacian[i, ny * nx - ny + i] += 1 / hy
-           laplacian[ny * nx - ny + i, i] += 1 / hy
-           laplacian[i * nx, (i + 1) * nx - 1] += 1 / hx
-           laplacian[(i + 1) * nx - 1, i * nx] += 1 / hx
+       for i in range(nx):
+           laplacian[i, ny * nx - ny + i - 1] += 1 / hy
+           laplacian[ny * nx - ny + i - 1, i] += 1 / hy
+       for i in range(nx - 1):
+            laplacian[i * nx, (i + 1) * nx - 1] += 1 / hx
+            laplacian[(i + 1) * nx - 1, i * nx] += 1 / hx
 
     return laplacian
 
-print(create_laplacian_2d(2,2,1,2))
+print(create_laplacian_2d(4,4,4,4,True))
