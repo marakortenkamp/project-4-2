@@ -4,12 +4,18 @@ def create_laplacian_2d(nx, ny, lx, ly, pbc=True):
     """Creates a discretized Laplacian in 2D
         
     Arguments:
-    nx (int): number of grid points along x; ny must be greater than one
+        nx (int): number of grid points along x; ny must be greater than one
         ny (int): number of grid points along y; nx must be greater than one
         lx (float): box length along x; must be positive
         ly (float): box length along y; must be positive and nx/lx == ny/ly (regular grid)
         pbc (boolean): use periodic boundary conditions
     """
+    if type(nx) != int or type(ny) != int:
+        raise TypeError('We need an integer')
+    if type(lx) != int and type(lx) != float:
+        raise TypeError('We need a number')
+    if type(ly) != int and type(ly) != float:
+        raise TypeError('We need a number')
     if nx < 2 or ny < 2:
         raise ValueError('We need at least two grid points in each direction')
     if nx / lx < 0 or ny / ly < 0:
@@ -38,9 +44,7 @@ def create_laplacian_2d(nx, ny, lx, ly, pbc=True):
            laplacian[i, ny * nx - ny + i - 1] += 1 / hy
            laplacian[ny * nx - ny + i - 1, i] += 1 / hy
        for i in range(nx - 1):
-            laplacian[i * nx, (i + 1) * nx - 1] += 1 / hx
-            laplacian[(i + 1) * nx - 1, i * nx] += 1 / hx
+           laplacian[i * nx, (i + 1) * nx - 1] += 1 / hx
+           laplacian[(i + 1) * nx - 1, i * nx] += 1 / hx
 
     return laplacian
-
-print(create_laplacian_2d(4,4,4,4,True))
