@@ -40,12 +40,12 @@ def create_laplacian_2d(nx, ny, lx, ly, pbc=True):
             laplacian[j * nx + i, j * nx + i + 1] += 1 / hx
             laplacian[j * nx + i + 1, j * nx + i] += 1 / hx
 
-if pbc:
-    for i in range(nx):
-        laplacian[i, ny * nx - ny + i - 1] += 1 / hy
-        laplacian[ny * nx - ny + i - 1, i] += 1 / hy
-        for i in range(nx - 1):
+    if pbc:
+        for i in range(ny):
+            laplacian[i, ny * nx - ny + i - 1] += 1 / hy
+            laplacian[ny * nx - ny + i - 1, i] += 1 / hy
+        for i in range(ny - 1):
             laplacian[i * nx, (i + 1) * nx - 1] += 1 / hx
             laplacian[(i + 1) * nx - 1, i * nx] += 1 / hx
 
-return laplacian
+    return laplacian
